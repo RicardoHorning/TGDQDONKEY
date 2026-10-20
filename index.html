@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Donkey TGDQ - O Desafio dos Dados</title>
+  <title>Donkey TGDQ Arcade (1981) - SENAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@600;700;800&display=swap');
 
     * {
       box-sizing: border-box;
@@ -20,241 +21,294 @@
       padding: 0;
       width: 100%;
       height: 100%;
-      background: #000000;
+      background: #020205;
       font-family: 'Rajdhani', sans-serif;
       overflow: hidden;
       color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    #game-container {
+    /* Main Arcade Outer Frame */
+    #arcade-container {
       position: relative;
       width: 100vw;
       height: 100vh;
+      max-width: 900px;
+      max-height: 100vh;
+      background: #080811;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background: #050508;
+      justify-content: space-between;
+      border: 4px solid #1a1a2e;
+      box-shadow: 0 0 50px rgba(255, 0, 85, 0.25);
+      overflow: hidden;
     }
 
-    /* HUD Bar */
-    #hud {
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* Top Retro Cabinet Header Bar */
+    #arcade-header {
       width: 100%;
-      height: 50px;
-      background: #111;
+      background: linear-gradient(180deg, #1b002c 0%, #080010 100%);
       border-bottom: 3px solid #ff0055;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 0 10px;
-      z-index: 10;
-      font-family: 'Press Start 2P', monospace;
-    }
-
-    .hud-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .hud-label {
-      color: #ff0055;
-      font-size: 8px;
-      letter-spacing: 1px;
-    }
-
-    .hud-value {
-      color: #00e5ff;
-      font-size: 12px;
-      text-shadow: 2px 2px 0px #000;
-    }
-
-    /* Area do Canvas */
-    #canvas-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      height: calc(100% - 50px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 5px;
-      margin-top: 50px;
-    }
-
-    canvas {
-      border: 4px solid #ff0055;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
-      background: #000000;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 10;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    /* Tela de Início / Press Start */
-    #start-screen {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .start-title {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 20px;
-      color: #ff0055;
-      margin-bottom: 10px;
-      text-shadow: 3px 3px 0 #00e5ff;
-    }
-
-    .start-subtitle {
-      font-size: 16px;
-      color: #ffe600;
-      margin-bottom: 30px;
-      font-weight: bold;
-    }
-
-    .btn-start {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 14px;
-      background: #ff0055;
-      color: #fff;
-      border: 3px solid #00e5ff;
-      padding: 16px 28px;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 6px 0 #990033, 0 0 20px rgba(0, 229, 255, 0.5);
-      animation: pulse 1.2s infinite alternate;
-    }
-
-    @keyframes pulse {
-      from { transform: scale(1); }
-      to { transform: scale(1.05); }
-    }
-
-    /* Controles Táteis Arcade */
-    #mobile-controls {
-      position: absolute;
-      bottom: 10px;
-      left: 0;
-      width: 100%;
-      padding: 0 15px;
+      padding: 6px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 20;
-      pointer-events: none;
     }
 
-    .control-btn-group {
+    .arcade-logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: #ffe600;
+      text-shadow: 3px 3px 0px #ff0055, -2px -2px 0px #00e5ff;
+      letter-spacing: 1px;
+    }
+
+    .arcade-subtitle {
+      font-size: 11px;
+      color: #00e5ff;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* HUD Bar */
+    #hud {
+      width: 100%;
+      background: #000000;
+      border-bottom: 2px solid #33334d;
       display: flex;
-      gap: 8px;
-      pointer-events: auto;
+      justify-content: space-around;
+      align-items: center;
+      padding: 6px 4px;
+      font-family: 'Press Start 2P', monospace;
+      z-index: 15;
+    }
+
+    .hud-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hud-title {
+      color: #ff0055;
+      font-size: 8px;
+      margin-bottom: 2px;
+    }
+
+    .hud-val {
+      color: #00e5ff;
+      font-size: 11px;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+    }
+
+    .hud-val.gold {
+      color: #ffe600;
+      text-shadow: 0 0 8px rgba(255, 230, 0, 0.6);
+    }
+
+    /* Canvas Screen Wrapper */
+    #canvas-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      overflow: hidden;
+    }
+
+    /* Floating CRT Effect Overlay */
+    #crt-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 12;
+      opacity: 0.6;
+    }
+
+    canvas {
+      display: block;
+      background: #000000;
+      border: 2px solid #1f1f33;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 800 / 580;
+    }
+
+    /* Mobile Virtual Controls */
+    #mobile-controls {
+      width: 100%;
+      background: linear-gradient(180deg, #0d0d18 0%, #05050b 100%);
+      border-top: 3px solid #ff0055;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 25;
+      touch-action: none;
+    }
+
+    .dpad-container {
+      display: grid;
+      grid-template-columns: repeat(3, 42px);
+      grid-template-rows: repeat(2, 42px);
+      gap: 4px;
     }
 
     .btn-touch {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #1f2937, #111827);
+      background: linear-gradient(145deg, #1e1e2f, #12121f);
       border: 2px solid #00e5ff;
+      border-radius: 8px;
       color: #00e5ff;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 0 #007799;
-      cursor: pointer;
+      box-shadow: 0 4px 0 #005f7f, 0 0 10px rgba(0, 229, 255, 0.2);
       font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
     }
 
     .btn-touch:active, .btn-touch.active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 #007799;
+      box-shadow: 0 1px 0 #005f7f;
       background: #00e5ff;
       color: #000;
     }
 
-    .btn-jump {
-      width: 62px;
-      height: 62px;
-      background: linear-gradient(145deg, #ff0055, #990033);
-      border-color: #ff6699;
-      color: #fff;
-      box-shadow: 0 4px 0 #660022;
-      font-size: 9px;
+    .btn-jump-action {
+      width: 85px;
+      height: 75px;
+      background: linear-gradient(145deg, #ff0055, #a00037);
+      border: 3px solid #ff80aa;
+      border-radius: 14px;
+      color: #ffffff;
+      font-size: 10px;
+      font-family: 'Press Start 2P', monospace;
+      box-shadow: 0 5px 0 #660022, 0 0 15px rgba(255, 0, 85, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
     }
 
-    /* Modais */
-    .modal-overlay {
+    .btn-jump-action:active, .btn-jump-action.active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #660022;
+      background: #ff3377;
+    }
+
+    /* Start Screen Overlay */
+    #start-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.92);
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(4, 3, 8, 0.96);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .title-arcade {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 26px;
+      color: #ff0055;
+      text-shadow: 4px 4px 0px #ffe600, -3px -3px 0px #00e5ff;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .start-badge {
+      background: #00e5ff;
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      font-weight: bold;
+    }
+
+    .start-prompt {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: #ffe600;
+      border: 3px solid #ff0055;
+      padding: 16px 28px;
+      border-radius: 12px;
+      background: rgba(255, 0, 85, 0.15);
+      animation: blink 1.2s infinite alternate;
+      box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+    }
+
+    @keyframes blink {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0.7; transform: scale(1.04); }
+    }
+
+    /* Modals System */
+    .modal-backdrop {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.9);
       backdrop-filter: blur(6px);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 30;
-      padding: 15px;
+      z-index: 150;
+      padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
-    .modal-overlay.active {
+    .modal-backdrop.active {
       opacity: 1;
       pointer-events: auto;
     }
 
     .modal-card {
-      background: #0d0d12;
-      border: 3px solid #ff0055;
-      border-radius: 12px;
+      background: #0e0d16;
+      border: 3px solid #00e5ff;
+      border-radius: 14px;
       padding: 20px;
-      max-width: 600px;
+      max-width: 620px;
       width: 100%;
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
-      box-shadow: 0 0 30px rgba(255, 0, 85, 0.4);
+      box-shadow: 0 0 35px rgba(0, 229, 255, 0.35);
     }
 
     .modal-header {
       font-family: 'Press Start 2P', monospace;
       font-size: 11px;
       color: #ffe600;
-      line-height: 1.6;
-      margin-bottom: 12px;
       border-bottom: 2px dashed #ff0055;
-      padding-bottom: 8px;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .modal-question {
       font-size: 16px;
       line-height: 1.5;
-      color: #f8fafc;
-      margin-bottom: 18px;
-      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 20px;
+      font-weight: 700;
     }
 
     .options-grid {
@@ -264,11 +318,11 @@
     }
 
     .option-btn {
-      background: #1a1a24;
-      border: 2px solid #33334d;
+      background: #181726;
+      border: 2px solid #2e2c45;
       border-radius: 8px;
-      padding: 12px 15px;
-      color: #fff;
+      padding: 12px 16px;
+      color: #f8fafc;
       font-size: 14px;
       font-weight: 600;
       text-align: left;
@@ -277,85 +331,81 @@
     }
 
     .option-btn:hover {
-      background: #2b2b3d;
+      background: #282640;
       border-color: #00e5ff;
       color: #00e5ff;
     }
 
-    .feedback-card {
+    /* Feedback Modal Styling */
+    .feedback-box {
       text-align: center;
-      max-width: 500px;
     }
 
     .feedback-icon {
-      font-size: 48px;
-      margin-bottom: 10px;
+      font-size: 42px;
+      margin-bottom: 8px;
     }
 
     .feedback-title {
       font-family: 'Press Start 2P', monospace;
       font-size: 13px;
       margin-bottom: 12px;
-      line-height: 1.5;
     }
 
-    .feedback-text {
+    .feedback-desc {
       font-size: 15px;
       line-height: 1.6;
-      color: #e2e8f0;
-      margin-bottom: 20px;
+      color: #cbd5e1;
       background: rgba(255, 255, 255, 0.05);
-      padding: 12px;
+      padding: 14px;
       border-radius: 8px;
+      margin-bottom: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* Relatorio Executivo */
-    .report-card {
+    /* Executive Report Screen */
+    .report-sheet {
       background: #ffffff;
       color: #0f172a;
       border-radius: 10px;
-      padding: 22px;
-      font-family: Arial, sans-serif;
+      padding: 24px;
+      font-family: 'Segoe UI', Arial, sans-serif;
     }
 
-    .report-header {
+    .report-hdr {
       text-align: center;
       border-bottom: 3px double #0284c7;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .report-title {
+    .report-title-text {
       font-size: 20px;
       font-weight: 800;
       color: #0369a1;
       margin: 0;
     }
 
-    .report-subtitle {
+    .report-sub {
       font-size: 12px;
-      color: #475569;
+      color: #64748b;
       margin-top: 4px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    .report-stats {
+    .report-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-bottom: 15px;
-      background: #f1f5f9;
+      background: #f8fafc;
       padding: 12px;
-      border-radius: 6px;
-      border: 1px solid #cbd5e1;
-    }
-
-    .report-stat-item {
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 16px;
       font-size: 13px;
     }
 
-    .report-stat-item strong {
+    .report-grid strong {
       color: #0284c7;
     }
 
@@ -363,7 +413,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 11px;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     .report-table th, .report-table td {
@@ -378,116 +428,1248 @@
       font-weight: bold;
     }
 
-    .report-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .btn-action {
+    .btn-rep {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
       font-size: 13px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    .btn-blue { background: #0284c7; color: white; }
-    .btn-green { background: #16a34a; color: white; }
+    .btn-rep-blue { background: #0284c7; color: white; }
+    .btn-rep-green { background: #16a34a; color: white; }
 
     @media print {
       body * { visibility: hidden; }
       #report-modal, #report-modal * { visibility: visible; }
-      #report-modal { position: absolute; left: 0; top: 0; width: 100%; }
-      .report-actions { display: none; }
+      #report-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; }
+      .no-print { display: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <div id="game-container">
-    <!-- Tela de Início / Press Start -->
-    <div id="start-screen">
-      <div class="start-title">DONKEY TGDQ</div>
-      <div class="start-subtitle">Desafio de Dados Quantitativos — SENAI</div>
-      <button class="btn-start" onclick="startGame()">▶ INICIAR JOGO</button>
+  <div id="arcade-container">
+    <!-- Header Cabinet Bar -->
+    <div id="arcade-header">
+      <div>
+        <div class="arcade-logo">DONKEY TGDQ</div>
+        <div class="arcade-subtitle">SENAI ARCADE (1981 CLASSIC)</div>
+      </div>
+      <div class="text-right">
+        <span class="text-xs text-pink-500 font-mono font-bold block">UC: TGDQ</span>
+        <span class="text-[10px] text-yellow-400 font-mono">HIGH: 99900</span>
+      </div>
     </div>
 
-    <!-- HUD Bar -->
+    <!-- Retro HUD Bar -->
     <div id="hud">
-      <div class="hud-item">
-        <span class="hud-label">FASE</span>
-        <span id="hud-level" class="hud-value">1/10</span>
+      <div class="hud-box">
+        <span class="hud-title">FASE</span>
+        <span id="hud-level" class="hud-val gold">01/10</span>
       </div>
-      <div class="hud-item">
-        <span class="hud-label">PONTOS</span>
-        <span id="hud-score" class="hud-value">00000</span>
+      <div class="hud-box">
+        <span class="hud-title">PONTOS</span>
+        <span id="hud-score" class="hud-val">00000</span>
       </div>
-      <div class="hud-item">
-        <span class="hud-label">MOEDAS</span>
-        <span id="hud-coins" class="hud-value">🪙 00</span>
+      <div class="hud-box">
+        <span class="hud-title">MOEDAS</span>
+        <span id="hud-coins" class="hud-val gold">🪙 00</span>
       </div>
-      <div class="hud-item">
-        <span class="hud-label">PRECISÃO</span>
-        <span id="hud-accuracy" class="hud-value">100%</span>
+      <div class="hud-box">
+        <span class="hud-title">PRECISÃO</span>
+        <span id="hud-accuracy" class="hud-val">100%</span>
       </div>
     </div>
 
-    <div id="canvas-wrapper">
-      <canvas id="gameCanvas" width="800" height="500"></canvas>
+    <!-- Game Canvas & CRT Screen -->
+    <div id="canvas-container">
+      <div id="crt-overlay"></div>
+      <canvas id="gameCanvas" width="800" height="580"></canvas>
 
-      <div id="mobile-controls">
-        <div class="control-btn-group">
-          <div id="btn-left" class="btn-touch">◄</div>
-          <div id="btn-right" class="btn-touch">►</div>
+      <!-- Start Overlay -->
+      <div id="start-overlay" onclick="startGame()">
+        <div class="title-arcade">DONKEY TGDQ</div>
+        <div class="start-badge">TRATAMENTO E GERENCIAMENTO DE DADOS QUANTITATIVOS</div>
+        <div style="font-size: 14px; color: #a5f3fc; margin-bottom: 25px; max-width: 480px; line-height: 1.5;">
+          Suba as escadas, desvie dos barris rolantes de dados incorretos e ajude a salvar o Relatorio TGDQ no topo!
         </div>
-        <div class="control-btn-group">
-          <div id="btn-up" class="btn-touch">▲</div>
-          <div id="btn-down" class="btn-touch">▼</div>
-          <div id="btn-jump" class="btn-touch btn-jump">PULAR</div>
+        <div class="start-prompt">▶ CLIQUE / TOQUE PARA INICIAR</div>
+        <div style="margin-top: 20px; font-size: 11px; color: #94a3b8; font-family: monospace;">
+          Controles: [A/D] Mover | [W/S] Escada | [Espaco] Pular
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Virtual Gamepad -->
+    <div id="mobile-controls">
+      <div class="dpad-container">
+        <div></div>
+        <div id="btn-up" class="btn-touch">▲</div>
+        <div></div>
+        <div id="btn-left" class="btn-touch">◄</div>
+        <div id="btn-down" class="btn-touch">▼</div>
+        <div id="btn-right" class="btn-touch">►</div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div id="btn-jump" class="btn-jump-action">
+          <span style="font-size: 18px;">⬆</span>
+          <span>PULAR</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Quiz -->
-  <div id="quiz-modal" class="modal-overlay">
+  <!-- Quiz Modal -->
+  <div id="quiz-modal" class="modal-backdrop">
     <div class="modal-card">
-      <div id="quiz-header" class="modal-header">❓ DESAFIO TGDQ</div>
+      <div id="quiz-header" class="modal-header">❓ DESAFIO TGDQ - SENAI</div>
       <div id="quiz-question" class="modal-question">Carregando pergunta...</div>
       <div id="quiz-options" class="options-grid"></div>
     </div>
   </div>
 
-  <!-- Modal de Feedback -->
-  <div id="feedback-modal" class="modal-overlay">
-    <div class="modal-card feedback-card">
-      <div id="feedback-icon" class="feedback-icon">💡</div>
+  <!-- Feedback Modal -->
+  <div id="feedback-modal" class="modal-backdrop">
+    <div class="modal-card feedback-box">
+      <div id="feedback-icon" class="feedback-icon">🌟</div>
       <div id="feedback-title" class="feedback-title">FEEDBACK</div>
-      <div id="feedback-text" class="feedback-text">Mensagem...</div>
-      <button id="feedback-btn" class="btn-action btn-blue" onclick="closeFeedback()">CONTINUAR A ESCALAR ▶</button>
+      <div id="feedback-desc" class="feedback-desc">Detalhes...</div>
+      <button id="feedback-btn" class="option-btn text-center w-full justify-center py-3 font-bold bg-cyan-600 border-cyan-400 text-white hover:bg-cyan-500" onclick="closeFeedback()">
+        AVANÇAR PARA A PRÓXIMA FASE ▶
+      </button>
     </div>
   </div>
 
-  <!-- Modal de Relatório Final -->
-  <div id="report-modal" class="modal-overlay">
-    <div class="modal-card" style="max-width: 680px;">
-      <div class="report-card">
-        <div class="report-header">
-          <h2 class="report-title">RELATÓRIO DE DESEMPENHO ACADÊMICO</h2>
-          <div class="report-subtitle">UC: Tratamento e Gerenciamento de Dados Quantitativos (TGDQ) | SENAI</div>
+  <!-- Final Executive Report Modal -->
+  <div id="report-modal" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 680px; padding: 12px;">
+      <div class="report-sheet">
+        <div class="report-hdr">
+          <h2 class="report-title-text">RELATÓRIO DE DESEMPENHO ACADÊMICO</h2>
+          <div class="report-sub">UC: Tratamento e Gerenciamento de Dados Quantitativos (TGDQ) | SENAI</div>
         </div>
 
-        <div class="report-stats">
-          <div class="report-stat-item"><strong>Estudante:</strong> Aluno(a) Assistente Adm.</div>
-          <div class="report-stat-item"><strong>Data de Emissão:</strong> <span id="rep-date">--/--/----</span></div>
-          <div class="report-stat-item"><strong>Pontuação Final:</strong> <span id="rep-score">0</span> pts</div>
-          <div class="report-stat-item"><strong>Precisão Acadêmica:</strong> <span id="rep-accuracy">0%</span></div>
-          <div class="report-stat-item"><strong>Moedas Coletadas:</strong> <span id="rep-coins">0</span></div>
-          <div class="report-stat-item"><strong>Nota Final TGDQ:</strong> <span id="rep-grade" style="font-weight:bold; color:#0284c7; font-size:16px;">0.0 / 10.0</span></div>
+        <div class="report-grid">
+          <div><strong>Estudante:</strong> Aluno(a) Assistente Adm.</div>
+          <div><strong>Data de Emissão:</strong> <span id="rep-date">--/--/----</span></div>
+          <div><strong>Pontuação Total:</strong> <span id="rep-score">0</span> pts</div>
+          <div><strong>Precisão Acadêmica:</strong> <span id="rep-accuracy">0%</span></div>
+          <div><strong>Moedas de Dados:</strong> <span id="rep-coins">0</span></div>
+          <div><strong>Nota Final TGDQ:</strong> <span id="rep-grade" style="font-weight:bold; color:#0284c7; font-size:16px;">0.0 / 10.0</span></div>
         </div>
 
-        <h4 style="margin: 10px 0 6px 0; font-size: 13px; color: #0369
+        <h4 style="margin: 10px 0 6px 0; font-size: 13px; color: #0369a1; font-weight: bold;">Matriz de Competências Mapeadas:</h4>
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Módulo Curricular TGDQ</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="report-table-body"></tbody>
+        </table>
+
+        <div style="font-size: 11px; color: #334155; background: #f0f9ff; padding: 10px; border-radius: 6px; border-left: 4px solid #0284c7; margin-bottom: 16px;">
+          <strong>Parecer Técnico-Pedagógico:</strong> O estudante concluiu a simulação prática em estilo Arcade de TGDQ, demonstrando proficiência no tratamento, validação, cálculo de margens e tomada de decisões fundamentadas em dados.
+        </div>
+
+        <div class="flex gap-3 no-print">
+          <button class="btn-rep btn-rep-blue" onclick="copyReportText()">📋 Copiar Texto Formatado</button>
+          <button class="btn-rep btn-rep-green" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Web Audio API Synth (Retro Sound Effects) */
+    class ArcadeSoundSystem {
+      constructor() { this.ctx = null; }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playJump() {
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+          osc.start(); osc.stop(this.ctx.currentTime + 0.12);
+        } catch(e) {}
+      }
+      playClimb() {
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(280, this.ctx.currentTime);
+          osc.frequency.setValueAtTime(360, this.ctx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.06);
+          osc.start(); osc.stop(this.ctx.currentTime + 0.06);
+        } catch(e) {}
+      }
+      playBarrelJump() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(587.33, now);
+          osc.frequency.setValueAtTime(880.00, now + 0.08);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.start(); osc.stop(now + 0.2);
+        } catch(e) {}
+      }
+      playCoin() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime, osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(987.77, now);
+          osc.frequency.setValueAtTime(1318.51, now + 0.08);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+          osc.start(); osc.stop(now + 0.22);
+        } catch(e) {}
+      }
+      playHit() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime, osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.linearRampToValueAtTime(50, now + 0.25);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.start(); osc.stop(now + 0.25);
+        } catch(e) {}
+      }
+      playCorrect() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime, osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          osc.frequency.setValueAtTime(1046.50, now + 0.24);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.38);
+          osc.start(); osc.stop(now + 0.38);
+        } catch(e) {}
+      }
+      playWrong() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime, osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.start(); osc.stop(now + 0.3);
+        } catch(e) {}
+      }
+    }
+
+    const sound = new ArcadeSoundSystem();
+
+    /* 10 Curriculum Educational Levels for SENAI TGDQ */
+    const TGDQ_CURRICULUM = [
+      {
+        id: 1, title: "Fase 1: Fundamentos de Dados", barrelSpeed: 2.2, spawnInterval: 180,
+        topic: "Dado vs Informacao e Conhecimento",
+        question: "A empresa registrou o numero '150' isoladamente. Depois, formatou para '150 vendas no mes de Agosto'. Qual e a transicao correta de conceitos?",
+        options: [
+          { text: "A) 150 e Conhecimento e a frase formatada e um Dado bruto.", correct: false },
+          { text: "B) 150 e um Dado bruto; '150 vendas em Agosto' e uma Informacao contextualizada.", correct: true },
+          { text: "C) Ambos sao dados nao estruturados e sem valor.", correct: false },
+          { text: "D) 150 e uma Causalidade estatistica.", correct: false }
+        ]
+      },
+      {
+        id: 2, title: "Fase 2: Pesquisa e Validacao", barrelSpeed: 2.5, spawnInterval: 160,
+        topic: "Auditoria, Fontes Oficiais e Series Historicas",
+        question: "Ao analisar o IPCA dos ultimos 5 anos, a equipe encontrou dois valores divergentes para o mesmo mes. Qual o procedimento de auditoria correto?",
+        options: [
+          { text: "A) Escolher o maior valor para garantir margem de seguranca.", correct: false },
+          { text: "B) Conferir a fonte oficial (ex: IBGE), verificar a unidade de medida e o periodo correto.", correct: true },
+          { text: "C) Excluir o historico e inventar uma media.", correct: false },
+          { text: "D) Somar os dois e dividir por dois sem checar a fonte.", correct: false }
+        ]
+      },
+      {
+        id: 3, title: "Fase 3: Estrutura de Planilhas", barrelSpeed: 2.8, spawnInterval: 140,
+        topic: "Operacoes Matematicas e Referencias de Celulas",
+        question: "Em uma planilha de custos, como devemos calcular o Custo Total multiplicando a Quantidade (celula A2) pelo Preco Unitario (celula B2)?",
+        options: [
+          { text: "A) =A2 * B2", correct: true },
+          { text: "B) A2 x B2 =", correct: false },
+          { text: "C) =SOMA(A2:B2) * 100", correct: false },
+          { text: "D) MULTIPLICAR(A2; B2)", correct: false }
+        ]
+      },
+      {
+        id: 4, title: "Fase 4: Funcoes de Pesquisa e Logica", barrelSpeed: 3.0, spawnInterval: 130,
+        topic: "PROCX, PROCV e Funcao SE",
+        question: "Para buscar o preco de um produto pelo seu codigo em qualquer coluna da tabela sem limitacoes de busca a esquerda, qual funcao moderna e recomendada?",
+        options: [
+          { text: "A) PROCX", correct: true },
+          { text: "B) SOMASE", correct: false },
+          { text: "C) CONT.SE", correct: false },
+          { text: "D) CONCATENAR", correct: false }
+        ]
+      },
+      {
+        id: 5, title: "Fase 5: OLTP vs OLAP e DW", barrelSpeed: 3.2, spawnInterval: 120,
+        topic: "Data Warehouse, ETL e Sistemas Transacionais",
+        question: "Um sistema de caixa de loja registra centenas de compras por minuto (OLTP). Qual estrutura e ideal para consolidar e analisar esse historico longo (OLAP)?",
+        options: [
+          { text: "A) Data Warehouse (DW) alimentado por processos de ETL.", correct: true },
+          { text: "B) Bloco de notas no computador do caixa.", correct: false },
+          { text: "C) Substituir o banco por arquivos de texto.", correct: false },
+          { text: "D) Apenas tabelas dinamicas temporarias.", correct: false }
+        ]
+      },
+      {
+        id: 6, title: "Fase 6: Estatistica Descritiva", barrelSpeed: 3.4, spawnInterval: 110,
+        topic: "Media, Mediana e Desvio Padrao",
+        question: "Uma empresa possui salarios de R$ 2.000, R$ 2.000, R$ 2.500 e R$ 60.000 (Diretor). Qual medida representa melhor o salario tipico sem distorcao extrema?",
+        options: [
+          { text: "A) Mediana (o valor central da distribuicao).", correct: true },
+          { text: "B) Media Aritmetica Simples.", correct: false },
+          { text: "C) Amplitude Total.", correct: false },
+          { text: "D) Variancia Amostral.", correct: false }
+        ]
+      },
+      {
+        id: 7, title: "Fase 7: Indicadores e Metricas", barrelSpeed: 3.6, spawnInterval: 100,
+        topic: "Calculos de Margem de Lucro % e Participacao",
+        question: "Se uma empresa teve Receita Total de R$ 200.000 e Lucro Liquido de R$ 50.000, qual foi a sua Margem de Lucro Percentual?",
+        options: [
+          { text: "A) 25%", correct: true },
+          { text: "B) 75%", correct: false },
+          { text: "C) 400%", correct: false },
+          { text: "D) 2,5%", correct: false }
+        ]
+      },
+      {
+        id: 8, title: "Fase 8: Graficos e Comunicacao", barrelSpeed: 3.8, spawnInterval: 95,
+        topic: "Comunicacao Visual e Series Temporais",
+        question: "Qual tipo de grafico e o mais indicado para apresentar a evolucao continua das vendas mes a mes ao longo do ano (Serie Temporal)?",
+        options: [
+          { text: "A) Grafico de Linhas.", correct: true },
+          { text: "B) Grafico de Pizza 3D com 30 fatias.", correct: false },
+          { text: "C) Grafico de Dispersao sem eixos.", correct: false },
+          { text: "D) Tabela sem formatacao.", correct: false }
+        ]
+      },
+      {
+        id: 9, title: "Fase 9: Tabelas Dinamicas", barrelSpeed: 4.0, spawnInterval: 90,
+        topic: "Pivot Tables, Agrupamento e Resumo",
+        question: "Qual recurso do Excel permite cruzar, resumir e agrupar rapidamente milhares de linhas de vendas por regiao e produto sem criar formulas manuais?",
+        options: [
+          { text: "A) Tabela Dinamica (Pivot Table).", correct: true },
+          { text: "B) Formatacao Condicional basica.", correct: false },
+          { text: "C) Validacao de Dados simples.", correct: false },
+          { text: "D) Localizar e Substituir.", correct: false }
+        ]
+      },
+      {
+        id: 10, title: "Fase 10: Fio Condutor da Decisao", barrelSpeed: 4.2, spawnInterval: 85,
+        topic: "Dado -> Tratamento -> Analise -> Indicador -> Decisao",
+        question: "Ao identificar no relatorio de indicadores que um produto perdeu 30% das vendas, qual e o papel do assistente administrativo no ciclo TGDQ?",
+        options: [
+          { text: "A) Interpretar as evidencias numericas e propor recomendacoes justificadas para a tomada de decisao.", correct: true },
+          { text: "B) Apagar os dados negativos para nao alarmar a gerencia.", correct: false },
+          { text: "C) Ignorar o indicador e manter os mesmos procedimentos.", correct: false },
+          { text: "D) Desligar os computadores e encerrar o projeto.", correct: false }
+        ]
+      }
+    ];
+
+    /* Game State Engine Variables */
+    let canvas, ctx;
+    let isRunning = false;
+    let animFrameReq = null;
+    let frameCounter = 0;
+
+    const gameState = {
+      levelIdx: 0,
+      score: 0,
+      coins: 0,
+      totalQuestions: 0,
+      correctQuestions: 0,
+      levelResults: [],
+      isQuizActive: false,
+      floatingTexts: []
+    };
+
+    const keys = { left: false, right: false, up: false, down: false };
+
+    /* Player Jumpman Object */
+    const player = {
+      x: 100, y: 500,
+      width: 28, height: 36,
+      vx: 0, vy: 0,
+      speed: 4.2,
+      jumpForce: -11.8,
+      gravity: 0.52,
+      grounded: false,
+      climbing: false,
+      facing: 'right',
+      animFrame: 0
+    };
+
+    /* Donkey Kong Gorilla Object */
+    const donkeyKong = {
+      x: 75, y: 55,
+      width: 80, height: 70,
+      state: 'idle', // 'idle', 'chest_left', 'chest_right', 'grab_barrel', 'throw'
+      animTimer: 0
+    };
+
+    /* Pauline / TGDQ Data Trophy Object */
+    const pauline = {
+      x: 420, y: 40,
+      width: 26, height: 42,
+      animTimer: 0
+    };
+
+    /* Level Geometry Structures */
+    let girders = [];
+    let ladders = [];
+    let barrels = [];
+    let coinsList = [];
+    let questionBlock = { x: 380, y: 38, width: 36, height: 36, active: true };
+
+    /* Initialize Girders & Ladders (Donkey Kong 1981 Layout) */
+    function setupLevelLayout() {
+      // 5 Zig-Zag Inclined Girders
+      girders = [
+        // Level 1 (Bottom floor, slightly slanted)
+        { x1: 0, y1: 540, x2: 800, y2: 530, thickness: 18 },
+        // Level 2 (Slanted right-to-left)
+        { x1: 40, y1: 440, x2: 760, y2: 415, thickness: 18 },
+        // Level 3 (Slanted left-to-right)
+        { x1: 40, y1: 310, x2: 760, y2: 330, thickness: 18 },
+        // Level 4 (Slanted right-to-left)
+        { x1: 40, y1: 215, x2: 760, y2: 190, thickness: 18 },
+        // Level 5 (Top DK & Pauline Platform)
+        { x1: 40, y1: 105, x2: 520, y2: 105, thickness: 18 }
+      ];
+
+      // Cyan Electric Ladders (Including broken ladder gaps)
+      ladders = [
+        { x: 690, y1: 422, y2: 532, broken: false },
+        { x: 110, y1: 318, y2: 433, broken: false },
+        { x: 670, y1: 196, y2: 322, broken: false },
+        { x: 320, y1: 105, y2: 202, broken: false },
+        // Broken decorative ladders
+        { x: 390, y1: 318, y2: 375, broken: true },
+        { x: 480, y1: 428, y2: 480, broken: true }
+      ];
+
+      // Spawn coins along the platforms
+      coinsList = [
+        { x: 260, y: 505, collected: false },
+        { x: 500, y: 495, collected: false },
+        { x: 350, y: 395, collected: false },
+        { x: 550, y: 380, collected: false },
+        { x: 220, y: 285, collected: false },
+        { x: 500, y: 275, collected: false },
+        { x: 250, y: 165, collected: false },
+        { x: 600, y: 155, collected: false }
+      ];
+
+      barrels = [];
+      player.x = 80;
+      player.y = 490;
+      player.vx = 0;
+      player.vy = 0;
+      player.climbing = false;
+      questionBlock.active = true;
+    }
+
+    /* Get Interpolated Girder Height at X Position */
+    function getGirderY(x, girder) {
+      if (x < Math.min(girder.x1, girder.x2) || x > Math.max(girder.x1, girder.x2)) return null;
+      const t = (x - girder.x1) / (girder.x2 - girder.x1);
+      return girder.y1 + t * (girder.y2 - girder.y1);
+    }
+
+    /* Spawn a rolling Wooden Barrel from Donkey Kong */
+    function spawnBarrel() {
+      const currentLvl = TGDQ_CURRICULUM[gameState.levelIdx];
+      barrels.push({
+        x: donkeyKong.x + 60,
+        y: donkeyKong.y + 35,
+        radius: 12,
+        vx: currentLvl.barrelSpeed,
+        vy: 0,
+        rotation: 0,
+        currentGirderIdx: 4, // Starts on top platform
+        falling: false,
+        jumpedOver: false
+      });
+    }
+
+    /* Spawn Floating Score Animations */
+    function addFloatingText(str, x, y, color = '#ffe600') {
+      gameState.floatingTexts.push({ text: str, x: x, y: y, opacity: 1.0, color: color });
+    }
+
+    /* Player & Barrel Collision / Physics Loop */
+    function updatePhysics() {
+      if (gameState.isQuizActive) return;
+
+      frameCounter++;
+      const currentLvl = TGDQ_CURRICULUM[gameState.levelIdx];
+
+      // Donkey Kong AI & Barrel Throwing Animation Cycle
+      donkeyKong.animTimer++;
+      if (donkeyKong.animTimer % currentLvl.spawnInterval === 0) {
+        donkeyKong.state = 'grab_barrel';
+        setTimeout(() => {
+          donkeyKong.state = 'throw';
+          spawnBarrel();
+          setTimeout(() => { donkeyKong.state = 'idle'; }, 300);
+        }, 300);
+      } else if (donkeyKong.animTimer % 40 === 0 && donkeyKong.state === 'idle') {
+        donkeyKong.state = (donkeyKong.state === 'chest_left') ? 'chest_right' : 'chest_left';
+      }
+
+      // Check ladder overlap
+      let nearLadder = null;
+      for (let l of ladders) {
+        if (!l.broken && Math.abs((player.x + player.width / 2) - l.x) < 18 &&
+            (player.y + player.height) >= l.y1 - 5 && player.y <= l.y2 + 5) {
+          nearLadder = l;
+          break;
+        }
+      }
+
+      // Ladder Climbing
+      if (nearLadder && (keys.up || keys.down)) {
+        player.climbing = true;
+        player.vx = 0;
+        player.x = nearLadder.x - player.width / 2; // Snap to ladder center
+        if (keys.up) { player.y -= 2.6; sound.playClimb(); }
+        if (keys.down) { player.y += 2.6; sound.playClimb(); }
+      } else if (!nearLadder) {
+        player.climbing = false;
+      }
+
+      // Horizontal Controls
+      if (!player.climbing) {
+        if (keys.left) {
+          player.vx = -player.speed;
+          player.facing = 'left';
+          player.animFrame++;
+        } else if (keys.right) {
+          player.vx = player.speed;
+          player.facing = 'right';
+          player.animFrame++;
+        } else {
+          player.vx *= 0.7;
+        }
+        player.vy += player.gravity;
+      }
+
+      player.x += player.vx;
+      player.y += player.vy;
+
+      // Screen boundaries
+      if (player.x < 10) player.x = 10;
+      if (player.x + player.width > 790) player.x = 790 - player.width;
+
+      // Platform Collision Detection
+      player.grounded = false;
+      if (!player.climbing) {
+        for (let g of girders) {
+          const gY = getGirderY(player.x + player.width / 2, g);
+          if (gY !== null && (player.y + player.height) >= gY - 4 && (player.y + player.height) <= gY + player.vy + 12 && player.vy >= 0) {
+            player.grounded = true;
+            player.vy = 0;
+            player.y = gY - player.height;
+          }
+        }
+      }
+
+      // Update Barrels Physics & Rolling Angles
+      for (let i = barrels.length - 1; i >= 0; i--) {
+        let b = barrels[i];
+
+        if (b.falling) {
+          b.vy += 0.4;
+          b.y += b.vy;
+          // Look for girder underneath to land on
+          for (let gIdx = 0; gIdx < girders.length; gIdx++) {
+            const gY = getGirderY(b.x, girders[gIdx]);
+            if (gY !== null && b.y + b.radius >= gY - 4 && b.y + b.radius <= gY + 12) {
+              b.falling = false;
+              b.vy = 0;
+              b.y = gY - b.radius;
+              b.currentGirderIdx = gIdx;
+              // Reverse direction based on zig-zag girder slope
+              b.vx = (girders[gIdx].x1 < girders[gIdx].x2 && girders[gIdx].y1 < girders[gIdx].y2) ? -currentLvl.barrelSpeed : currentLvl.barrelSpeed;
+              break;
+            }
+          }
+        } else {
+          // Roll on current girder
+          const g = girders[b.currentGirderIdx];
+          b.x += b.vx;
+          const gY = getGirderY(b.x, g);
+
+          if (gY === null) {
+            // Reached edge of girder -> Fall to next platform!
+            b.falling = true;
+          } else {
+            b.y = gY - b.radius;
+            b.rotation += (b.vx / b.radius);
+          }
+        }
+
+        // Barrel Jump Detection (+100 PTS Bonus!)
+        if (!b.jumpedOver && !player.grounded && !player.climbing) {
+          const dx = Math.abs((player.x + player.width / 2) - b.x);
+          const dy = player.y + player.height - b.y;
+          if (dx < 26 && dy < -5 && dy > -50) {
+            b.jumpedOver = true;
+            gameState.score += 100;
+            sound.playBarrelJump();
+            addFloatingText("+100 BÔNUS!", b.x, b.y - 15, '#ffe600');
+            updateHUD();
+          }
+        }
+
+        // Barrel Hit Player Collision
+        const pCenterX = player.x + player.width / 2;
+        const pCenterY = player.y + player.height / 2;
+        const distToBarrel = Math.hypot(pCenterX - b.x, pCenterY - b.y);
+
+        if (distToBarrel < b.radius + 12) {
+          sound.playHit();
+          addFloatingText("COLISÃO!", player.x, player.y - 10, '#ff0055');
+          // Reset player position to start of level
+          player.x = 80;
+          player.y = 490;
+          player.vx = 0; player.vy = 0;
+        }
+
+        // Remove out-of-bounds barrels
+        if (b.y > 570 || b.x < -20 || b.x > 820) {
+          barrels.splice(i, 1);
+        }
+      }
+
+      // Collect Coins
+      for (let c of coinsList) {
+        if (!c.collected) {
+          const dx = (player.x + player.width / 2) - c.x;
+          const dy = (player.y + player.height / 2) - c.y;
+          if (Math.hypot(dx, dy) < 20) {
+            c.collected = true;
+            gameState.coins++;
+            gameState.score += 50;
+            sound.playCoin();
+            addFloatingText("+50 🪙", c.x, c.y - 10, '#00e5ff');
+            updateHUD();
+          }
+        }
+      }
+
+      // Reaching Question Block or Pauline at Top Platform
+      if (
+        questionBlock.active &&
+        player.x < questionBlock.x + questionBlock.width &&
+        player.x + player.width > questionBlock.x &&
+        player.y < questionBlock.y + questionBlock.height + 10 &&
+        player.y + player.height > questionBlock.y
+      ) {
+        questionBlock.active = false;
+        triggerQuizModal();
+      }
+
+      // Update floating texts
+      for (let i = gameState.floatingTexts.length - 1; i >= 0; i--) {
+        let ft = gameState.floatingTexts[i];
+        ft.y -= 0.8;
+        ft.opacity -= 0.02;
+        if (ft.opacity <= 0) gameState.floatingTexts.splice(i, 1);
+      }
+    }
+
+    /* Jump trigger function */
+    function handleJump() {
+      if (player.grounded && !player.climbing) {
+        player.vy = player.jumpForce;
+        player.grounded = false;
+        sound.playJump();
+      }
+    }
+
+    /* =========================================================================
+       CANVAS RENDERING ENGINE (DONKEY KONG 1981 RETRÔ STYLE)
+       ========================================================================= */
+    function render() {
+      if (!ctx) return;
+
+      // Clear Black Screen
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, 800, 580);
+
+      // 1. DRAW GIRDERS (Magenta Truss Lattice)
+      for (let g of girders) {
+        ctx.save();
+        ctx.strokeStyle = '#ff0077';
+        ctx.fillStyle = '#e6005c';
+        ctx.lineWidth = 3;
+
+        // Girder Top & Bottom Rails
+        ctx.beginPath();
+        ctx.moveTo(g.x1, g.y1); ctx.lineTo(g.x2, g.y2);
+        ctx.moveTo(g.x1, g.y1 + g.thickness); ctx.lineTo(g.x2, g.y2 + g.thickness);
+        ctx.stroke();
+
+        // Criss-Cross X Truss Pattern
+        const dx = g.x2 - g.x1, dy = g.y2 - g.y1;
+        const steps = Math.floor(Math.abs(dx) / 16);
+        ctx.strokeStyle = '#ff66aa';
+        ctx.lineWidth = 1.5;
+
+        for (let i = 0; i < steps; i++) {
+          const t1 = i / steps, t2 = (i + 1) / steps;
+          const px1 = g.x1 + t1 * dx, py1 = g.y1 + t1 * dy;
+          const px2 = g.x1 + t2 * dx, py2 = g.y1 + t2 * dy;
+
+          ctx.beginPath();
+          ctx.moveTo(px1, py1); ctx.lineTo(px2, py2 + g.thickness);
+          ctx.moveTo(px1, py1 + g.thickness); ctx.lineTo(px2, py2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // 2. DRAW CYAN ELECTRIC LADDERS
+      for (let l of ladders) {
+        ctx.save();
+        ctx.strokeStyle = l.broken ? '#007799' : '#00e5ff';
+        ctx.lineWidth = 3;
+
+        // Side rails
+        ctx.beginPath();
+        ctx.moveTo(l.x - 10, l.y1); ctx.lineTo(l.x - 10, l.y2);
+        ctx.moveTo(l.x + 10, l.y1); ctx.lineTo(l.x + 10, l.y2);
+        ctx.stroke();
+
+        // Rungs
+        for (let r = l.y1 + 8; r < l.y2; r += 12) {
+          ctx.beginPath();
+          ctx.moveTo(l.x - 10, r); ctx.lineTo(l.x + 10, r);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // 3. DRAW ANIMATED OIL DRUM WITH FIRE (Bottom Left)
+      ctx.save();
+      ctx.fillStyle = '#0055ff';
+      ctx.fillRect(20, 480, 32, 50);
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(20, 480, 32, 50);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillText('OIL', 26, 510);
+
+      // Flickering Flames
+      const flameH = 15 + Math.sin(frameCounter * 0.2) * 6;
+      ctx.fillStyle = (frameCounter % 10 < 5) ? '#ffe600' : '#ff0055';
+      ctx.beginPath();
+      ctx.moveTo(22, 480);
+      ctx.quadraticCurveTo(36, 480 - flameH, 50, 480);
+      ctx.fill();
+      ctx.restore();
+
+      // 4. DRAW DONKEY KONG GORILLA (Canvas Detailed Procedural Sprite)
+      ctx.save();
+      const dkX = donkeyKong.x, dkY = donkeyKong.y;
+
+      // Barrel Stack next to DK
+      ctx.fillStyle = '#8b4513';
+      ctx.fillRect(dkX - 35, dkY + 15, 24, 32);
+      ctx.fillRect(dkX - 35, dkY - 12, 24, 24);
+      ctx.strokeStyle = '#d2691e';
+      ctx.strokeRect(dkX - 35, dkY + 15, 24, 32);
+
+      // DK Body (Fur)
+      ctx.fillStyle = '#5c2c06';
+      ctx.beginPath();
+      ctx.ellipse(dkX + 35, dkY + 40, 32, 26, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Head
+      ctx.beginPath();
+      ctx.ellipse(dkX + 35, dkY + 15, 20, 18, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Face / Snout / Chest (Tan/Beige)
+      ctx.fillStyle = '#f5c396';
+      ctx.beginPath();
+      ctx.ellipse(dkX + 35, dkY + 42, 18, 16, 0, 0, Math.PI * 2); // Chest
+      ctx.ellipse(dkX + 35, dkY + 18, 14, 10, 0, 0, Math.PI * 2); // Snout
+      ctx.fill();
+
+      // Eyes & Snarl
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(dkX + 26, dkY + 8, 6, 6);
+      ctx.fillRect(dkX + 38, dkY + 8, 6, 6);
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(dkX + 28, dkY + 10, 3, 3);
+      ctx.fillRect(dkX + 40, dkY + 10, 3, 3);
+
+      // Mouth / Teeth
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(dkX + 28, dkY + 20, 14, 4);
+
+      // Iconic Red Tie "DK"
+      ctx.fillStyle = '#ff0033';
+      ctx.beginPath();
+      ctx.moveTo(dkX + 35, dkY + 28);
+      ctx.lineTo(dkX + 28, dkY + 52);
+      ctx.lineTo(dkX + 35, dkY + 58);
+      ctx.lineTo(dkX + 42, dkY + 52);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#ffe600';
+      ctx.font = 'bold 8px sans-serif';
+      ctx.fillText('DK', dkX + 30, dkY + 44);
+
+      // Arms (Chest Beat / Barrel Throw Animation States)
+      ctx.fillStyle = '#5c2c06';
+      if (donkeyKong.state === 'chest_left') {
+        ctx.fillRect(dkX + 5, dkY + 20, 16, 28); // Left arm pounding chest
+        ctx.fillRect(dkX + 50, dkY + 10, 22, 16);
+      } else if (donkeyKong.state === 'chest_right') {
+        ctx.fillRect(dkX + 2, dkY + 10, 22, 16);
+        ctx.fillRect(dkX + 48, dkY + 20, 16, 28); // Right arm pounding chest
+      } else if (donkeyKong.state === 'grab_barrel') {
+        ctx.fillRect(dkX - 15, dkY + 10, 28, 16); // Reaching for barrel stack
+        ctx.fillRect(dkX + 50, dkY + 20, 16, 28);
+      } else if (donkeyKong.state === 'throw') {
+        ctx.fillRect(dkX + 15, dkY - 10, 20, 25); // Overhead barrel throw
+        ctx.fillRect(dkX + 40, dkY - 10, 20, 25);
+        // Barrel overhead
+        ctx.fillStyle = '#8b4513';
+        ctx.fillRect(dkX + 20, dkY - 22, 28, 18);
+      } else {
+        ctx.fillRect(dkX + 2, dkY + 20, 16, 32);
+        ctx.fillRect(dkX + 52, dkY + 20, 16, 32);
+      }
+      ctx.restore();
+
+      // 5. DRAW PAULINE / TGDQ DATA TROPHY (Top Platform Right)
+      ctx.save();
+      const pX = pauline.x, pY = pauline.y;
+
+      // Pink Dress
+      ctx.fillStyle = '#ff00aa';
+      ctx.beginPath();
+      ctx.moveTo(pX + 13, pY + 12);
+      ctx.lineTo(pX, pY + 40);
+      ctx.lineTo(pX + 26, pY + 40);
+      ctx.closePath();
+      ctx.fill();
+
+      // Head & Blonde/Brown Hair
+      ctx.fillStyle = '#ffe0bd';
+      ctx.beginPath();
+      ctx.arc(pX + 13, pY + 8, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#8b4513';
+      ctx.fillRect(pX + 6, pY + 2, 14, 6);
+
+      // Waving Arm Speech Bubble "HELP TGDQ!"
+      const wave = Math.sin(frameCounter * 0.15) * 6;
+      ctx.strokeStyle = '#ffe0bd';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(pX + 20, pY + 16); ctx.lineTo(pX + 28, pY + 8 + wave);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(pX - 45, pY - 15, 60, 16);
+      ctx.fillStyle = '#000000';
+      ctx.font = 'bold 8px sans-serif';
+      ctx.fillText('HELP TGDQ!', pX - 42, pY - 4);
+      ctx.restore();
+
+      // 6. DRAW QUESTION BLOCK ('?')
+      if (questionBlock.active) {
+        ctx.save();
+        const glow = Math.sin(frameCounter * 0.1) * 3;
+        ctx.fillStyle = '#ffe600';
+        ctx.fillRect(questionBlock.x - glow/2, questionBlock.y - glow/2, questionBlock.width + glow, questionBlock.height + glow);
+        ctx.strokeStyle = '#ff0055';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(questionBlock.x - glow/2, questionBlock.y - glow/2, questionBlock.width + glow, questionBlock.height + glow);
+
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 22px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('?', questionBlock.x + questionBlock.width / 2, questionBlock.y + 26);
+        ctx.restore();
+      }
+
+      // 7. DRAW ROLLING WOODEN BARRELS
+      for (let b of barrels) {
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rotation);
+
+        // Barrel Body
+        ctx.fillStyle = '#a52a2a';
+        ctx.beginPath();
+        ctx.arc(0, 0, b.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#d2691e';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Metallic Iron Bands & Planks
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-b.radius, 0); ctx.lineTo(b.radius, 0);
+        ctx.moveTo(0, -b.radius); ctx.lineTo(0, b.radius);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      // 8. DRAW COINS
+      for (let c of coinsList) {
+        if (!c.collected) {
+          ctx.save();
+          const scaleX = Math.max(0.2, Math.abs(Math.sin(frameCounter * 0.1)));
+          ctx.translate(c.x, c.y);
+          ctx.scale(scaleX, 1);
+          ctx.beginPath();
+          ctx.arc(0, 0, 8, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffe600';
+          ctx.fill();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
+      // 9. DRAW JUMPMAN (MARIO)
+      ctx.save();
+      const p = player;
+      ctx.translate(p.x, p.y);
+
+      if (p.climbing) {
+        // Climbing Ladder Pose (Back turned)
+        ctx.fillStyle = '#ff0033'; // Red shirt/cap
+        ctx.fillRect(4, 0, 20, 8);
+        ctx.fillStyle = '#0055ff'; // Blue Overalls
+        ctx.fillRect(6, 8, 16, 20);
+        ctx.fillStyle = '#8b4513'; // Shoes
+        ctx.fillRect(2, 28, 8, 8);
+        ctx.fillRect(18, 24, 8, 8);
+      } else {
+        // Facing Left/Right Overalls
+        if (p.facing === 'left') ctx.scale(-1, 1), ctx.translate(-p.width, 0);
+
+        // Red Hat & Mustache
+        ctx.fillStyle = '#ff0033';
+        ctx.fillRect(6, 0, 18, 8); // Hat
+        ctx.fillStyle = '#ffe0bd'; // Face
+        ctx.fillRect(8, 8, 14, 8);
+        ctx.fillStyle = '#4a2511'; // Mustache
+        ctx.fillRect(14, 12, 8, 4);
+
+        // Blue Overalls & Red Arms
+        ctx.fillStyle = '#ff0033';
+        ctx.fillRect(2, 14, 6, 10); // Red sleeve
+        ctx.fillStyle = '#0055ff';
+        ctx.fillRect(8, 14, 12, 14); // Overalls
+        ctx.fillStyle = '#ffe600'; // Yellow buttons
+        ctx.fillRect(10, 18, 3, 3);
+
+        // Legs / Shoes Running Animation Cycle
+        ctx.fillStyle = '#4a2511';
+        if (!p.grounded) {
+          // Jump Pose
+          ctx.fillRect(2, 26, 8, 8);
+          ctx.fillRect(16, 22, 8, 8);
+        } else if (Math.floor(p.animFrame / 4) % 2 === 0) {
+          ctx.fillRect(4, 28, 8, 8);
+          ctx.fillRect(16, 28, 8, 8);
+        } else {
+          ctx.fillRect(0, 28, 8, 8);
+          ctx.fillRect(14, 28, 8, 8);
+        }
+      }
+      ctx.restore();
+
+      // 10. DRAW FLOATING SCORE TEXTS
+      for (let ft of gameState.floatingTexts) {
+        ctx.save();
+        ctx.globalAlpha = ft.opacity;
+        ctx.fillStyle = ft.color;
+        ctx.font = 'bold 12px "Press Start 2P", monospace';
+        ctx.fillText(ft.text, ft.x, ft.y);
+        ctx.restore();
+      }
+    }
+
+    /* Game Animation Loop */
+    function gameLoop() {
+      try {
+        updatePhysics();
+        render();
+      } catch(e) {
+        console.error("Loop Error:", e);
+      }
+      animFrameReq = requestAnimationFrame(gameLoop);
+    }
+
+    /* Modal Triggers & Curriculum Quiz Handlers */
+    function triggerQuizModal() {
+      gameState.isQuizActive = true;
+      const lvl = TGDQ_CURRICULUM[gameState.levelIdx];
+
+      document.getElementById('quiz-header').innerText = `❓ DESAFIO TGDQ - ${lvl.title.toUpperCase()}`;
+      document.getElementById('quiz-question').innerText = lvl.question;
+
+      const optsContainer = document.getElementById('quiz-options');
+      optsContainer.innerHTML = '';
+
+      lvl.options.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => handleAnswer(opt.correct, lvl);
+        optsContainer.appendChild(btn);
+      });
+
+      document.getElementById('quiz-modal').classList.add('active');
+    }
+
+    function handleAnswer(isCorrect, levelData) {
+      gameState.totalQuestions++;
+      document.getElementById('quiz-modal').classList.remove('active');
+
+      const iconEl = document.getElementById('feedback-icon');
+      const titleEl = document.getElementById('feedback-title');
+      const descEl = document.getElementById('feedback-desc');
+
+      if (isCorrect) {
+        gameState.score += 300;
+        gameState.correctQuestions++;
+        sound.playCorrect();
+
+        iconEl.innerText = "🌟";
+        titleEl.innerText = "RESPOSTA CORRETA!";
+        titleEl.style.color = "#4ade80";
+        descEl.innerHTML = `Excelente! Voce demonstrou dominio na competencia de <strong>"${levelData.topic}"</strong>.<br><br>✨ <strong>+300 Pontos</strong> adicionados ao seu relatorio TGDQ!`;
+      } else {
+        sound.playWrong();
+
+        iconEl.innerText = "💡";
+        titleEl.innerText = "DICA PEDAGÓGICA SENAI";
+        titleEl.style.color = "#f87171";
+        descEl.innerHTML = `Atenção ao conceito de <strong>${levelData.topic}</strong>.<br><br>👉 <em>Revisão: Em analises quantitativas, a escolha correta das formulas e fontes oficiais previne erros em relatorios executivos!</em>`;
+      }
+
+      gameState.levelResults.push({ level: levelData.id, topic: levelData.topic, correct: isCorrect });
+      updateHUD();
+      document.getElementById('feedback-modal').classList.add('active');
+    }
+
+    function closeFeedback() {
+      document.getElementById('feedback-modal').classList.remove('active');
+      gameState.isQuizActive = false;
+
+      if (gameState.levelIdx < TGDQ_CURRICULUM.length - 1) {
+        gameState.levelIdx++;
+        setupLevelLayout();
+      } else {
+        finishGameAndShowReport();
+      }
+    }
+
+    function updateHUD() {
+      document.getElementById('hud-level').innerText = `${String(gameState.levelIdx + 1).padStart(2, '0')}/10`;
+      document.getElementById('hud-score').innerText = String(gameState.score).padStart(5, '0');
+      document.getElementById('hud-coins').innerText = `🪙 ${String(gameState.coins).padStart(2, '0')}`;
+
+      const accuracy = gameState.totalQuestions > 0
+        ? Math.round((gameState.correctQuestions / gameState.totalQuestions) * 100)
+        : 100;
+      document.getElementById('hud-accuracy').innerText = `${accuracy}%`;
+    }
+
+    function finishGameAndShowReport() {
+      if (animFrameReq) cancelAnimationFrame(animFrameReq);
+      gameState.isQuizActive = true;
+
+      const accuracy = gameState.totalQuestions > 0 ? (gameState.correctQuestions / gameState.totalQuestions) : 1;
+      const finalGrade = (accuracy * 10).toFixed(1);
+
+      document.getElementById('rep-date').innerText = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('rep-score').innerText = gameState.score;
+      document.getElementById('rep-accuracy').innerText = `${Math.round(accuracy * 100)}%`;
+      document.getElementById('rep-coins').innerText = gameState.coins;
+      document.getElementById('rep-grade').innerText = `${finalGrade} / 10.0`;
+
+      const tbody = document.getElementById('report-table-body');
+      tbody.innerHTML = '';
+
+      TGDQ_CURRICULUM.forEach(lvl => {
+        const res = gameState.levelResults.find(r => r.level === lvl.id);
+        const tr = document.createElement('tr');
+        const statusText = res ? (res.correct ? '✅ Competência Atingida' : '⚠️ Necessita Revisão') : '✓ Concluído';
+        tr.innerHTML = `<td><strong>${lvl.title}</strong></td><td>${lvl.topic}</td><td>${statusText}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('report-modal').classList.add('active');
+    }
+
+    function copyReportText() {
+      const accuracy = gameState.totalQuestions > 0 ? Math.round((gameState.correctQuestions / gameState.totalQuestions) * 100) : 100;
+      const finalGrade = (accuracy / 10).toFixed(1);
+
+      const text = `
+=== RELATÓRIO DE DESEMPENHO TGDQ - SENAI ===
+UC: Tratamento e Gerenciamento de Dados Quantitativos
+Data de Emissão: ${new Date().toLocaleDateString('pt-BR')}
+
+Pontuação Total Arcade: ${gameState.score} pts
+Moedas de Dados Coletadas: ${gameState.coins}
+Precisão nos Desafios: ${accuracy}%
+Nota Final Calculada: ${finalGrade} / 10.0
+
+Resumo das Competências Mapeadas:
+1. Fundamentos de Dados (Dado vs Informação): Concluído
+2. Pesquisa e Validação (Auditoria IBGE): Concluído
+3. Planilhas e Operações Matensáticas: Concluído
+4. Funções de Busca (PROCX, SE): Concluído
+5. Arquitetura (OLTP, OLAP, DW, ETL): Concluído
+6. Estatística Descritiva (Média vs Mediana): Concluído
+7. Indicadores e Margem de Lucro %: Concluído
+8. Comunicação Visual e Séries Temporais: Concluído
+9. Tabelas Dinâmicas (Pivot Tables): Concluído
+10. O Fio Condutor da Tomada de Decisão: Concluído
+============================================
+      `.trim();
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('📋 Relatório executivo copiado para a área de transferência!');
+      });
+    }
+
+    /* Bind Touch & Controller Listeners */
+    function bindTouchBtn(id, startAction, endAction) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const handleStart = (e) => {
+        if (e.cancelable) e.preventDefault();
+        sound.init();
+        el.classList.add('active');
+        startAction();
+      };
+
+      const handleEnd = (e) => {
+        if (e.cancelable) e.preventDefault();
+        el.classList.remove('active');
+        if (endAction) endAction();
+      };
+
+      el.addEventListener('touchstart', handleStart, { passive: false });
+      el.addEventListener('touchend', handleEnd, { passive: false });
+      el.addEventListener('mousedown', handleStart);
+      el.addEventListener('mouseup', handleEnd);
+    }
+
+    function startGame() {
+      if (isRunning) return;
+      isRunning = true;
+
+      sound.init();
+
+      const overlay = document.getElementById('start-overlay');
+      if (overlay) overlay.style.display = 'none';
+
+      canvas = document.getElementById('gameCanvas');
+      ctx = canvas.getContext('2d');
+
+      // Bind Touch Buttons
+      bindTouchBtn('btn-left', () => keys.left = true, () => keys.left = false);
+      bindTouchBtn('btn-right', () => keys.right = true, () => keys.right = false);
+      bindTouchBtn('btn-up', () => keys.up = true, () => keys.up = false);
+      bindTouchBtn('btn-down', () => keys.down = true, () => keys.down = false);
+      bindTouchBtn('btn-jump', () => handleJump(), null);
+
+      // Keyboard Controls
+      window.addEventListener('keydown', (e) => {
+        sound.init();
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+        if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.up = true;
+        if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.down = true;
+        if (e.key === ' ' || e.key === 'Spacebar') handleJump();
+      });
+
+      window.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+        if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.up = false;
+        if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.down = false;
+      });
+
+      setupLevelLayout();
+      updateHUD();
+      gameLoop();
+    }
+
+    window.startGame = startGame;
+    window.closeFeedback = closeFeedback;
+    window.copyReportText = copyReportText;
+  </script>
+</body>
+</html>
