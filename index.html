@@ -37,7 +37,7 @@
       background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
     }
 
-    /* Top Arcade HUD Bar */
+    /* Barra Superior HUD */
     #hud {
       position: absolute;
       top: 0;
@@ -74,7 +74,7 @@
       text-shadow: 2px 2px 0px #000;
     }
 
-    /* Canvas Wrapper */
+    /* Área do Canvas */
     #canvas-wrapper {
       position: relative;
       width: 100%;
@@ -83,6 +83,7 @@
       align-items: center;
       justify-content: center;
       padding: 10px;
+      margin-top: 55px;
     }
 
     canvas {
@@ -93,11 +94,824 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+      display: block;
     }
 
-    /* On-Screen Mobile Arcade Controls */
+    /* Controles Táteis para Telemóvel */
     #mobile-controls {
       position: absolute;
       bottom: 20px;
       left: 0;
-      width: 10
+      width: 100%;
+      padding: 0 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .control-btn-group {
+      display: flex;
+      gap: 15px;
+      pointer-events: auto;
+    }
+
+    .btn-touch {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+      border: 3px solid #60a5fa;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 0 #1e3a8a, 0 8px 15px rgba(0,0,0,0.5);
+      transition: transform 0.05s;
+      cursor: pointer;
+    }
+
+    .btn-touch:active, .btn-touch.active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #1e3a8a, 0 4px 10px rgba(0,0,0,0.5);
+      background: linear-gradient(145deg, #2563eb, #1e40af);
+    }
+
+    .btn-jump {
+      width: 75px;
+      height: 75px;
+      background: linear-gradient(145deg, #ef4444, #dc2626);
+      border-color: #f87171;
+      box-shadow: 0 6px 0 #991b1b, 0 8px 15px rgba(239, 68, 68, 0.4);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+    }
+
+    .btn-jump:active, .btn-jump.active {
+      background: linear-gradient(145deg, #dc2626, #b91c1c);
+      box-shadow: 0 2px 0 #991b1b;
+    }
+
+    /* Modais */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      padding: 15px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 3px solid #fbbf24;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 620px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 0 35px rgba(251, 191, 36, 0.3);
+    }
+
+    .modal-header {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: #fbbf24;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      border-bottom: 2px dashed #334155;
+      padding-bottom: 10px;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    .modal-question {
+      font-size: 17px;
+      line-height: 1.5;
+      color: #f8fafc;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: #334155;
+      border: 2px solid #475569;
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover {
+      background: #475569;
+      border-color: #38bdf8;
+      transform: translateX(4px);
+    }
+
+    .feedback-card {
+      text-align: center;
+      max-width: 520px;
+    }
+
+    .feedback-icon {
+      font-size: 52px;
+      margin-bottom: 10px;
+    }
+
+    .feedback-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .feedback-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      margin-bottom: 22px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .report-card {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 12px;
+      padding: 25px;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .report-header {
+      text-align: center;
+      border-bottom: 3px double #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+
+    .report-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e3a8a;
+      margin: 0;
+    }
+
+    .report-subtitle {
+      font-size: 13px;
+      color: #475569;
+      margin-top: 5px;
+      font-weight: 600;
+    }
+
+    .report-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+      background: #f1f5f9;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .report-stat-item {
+      font-size: 14px;
+    }
+
+    .report-stat-item strong {
+      color: #1e40af;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-bottom: 18px;
+    }
+
+    .report-table th, .report-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    .report-table th {
+      background: #e2e8f0;
+      color: #0f172a;
+      font-weight: bold;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .btn-blue { background: #2563eb; color: white; }
+    .btn-green { background: #16a34a; color: white; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #report-modal, #report-modal * { visibility: visible; }
+      #report-modal { position: absolute; left: 0; top: 0; width: 100%; }
+      .report-actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    <div id="hud">
+      <div class="hud-item">
+        <span class="hud-label">FASE</span>
+        <span id="hud-level" class="hud-value">1/10</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">PONTOS</span>
+        <span id="hud-score" class="hud-value">00000</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">MOEDAS</span>
+        <span id="hud-coins" class="hud-value">🪙 00</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">PRECISÃO</span>
+        <span id="hud-accuracy" class="hud-value">100%</span>
+      </div>
+    </div>
+
+    <div id="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+      <div id="mobile-controls">
+        <div class="control-btn-group">
+          <div id="btn-left" class="btn-touch">◄</div>
+          <div id="btn-right" class="btn-touch">►</div>
+        </div>
+        <div class="control-btn-group">
+          <div id="btn-jump" class="btn-touch btn-jump">PULAR</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="quiz-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div id="quiz-header" class="modal-header">❓ DESAFIO TGDQ</div>
+      <div id="quiz-question" class="modal-question">Carregando desafio...</div>
+      <div id="quiz-options" class="options-grid"></div>
+    </div>
+  </div>
+
+  <div id="feedback-modal" class="modal-overlay">
+    <div class="modal-card feedback-card">
+      <div id="feedback-icon" class="feedback-icon">💡</div>
+      <div id="feedback-title" class="feedback-title">MENSAGEM</div>
+      <div id="feedback-text" class="feedback-text">Texto de feedback...</div>
+      <button id="feedback-btn" class="btn-action btn-blue" onclick="closeFeedback()">CONTINUAR A JOGAR ▶</button>
+    </div>
+  </div>
+
+  <div id="report-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="report-card">
+        <div class="report-header">
+          <h2 class="report-title">RELATÓRIO DE DESEMPENHO ACADÊMICO</h2>
+          <div class="report-subtitle">UC: Tratamento e Gerenciamento de Dados Quantitativos (TGDQ) | SENAI</div>
+        </div>
+
+        <div class="report-stats">
+          <div class="report-stat-item"><strong>Estudante:</strong> Aluno(a) Assistente Adm.</div>
+          <div class="report-stat-item"><strong>Data de Emissão:</strong> <span id="rep-date">--/--/----</span></div>
+          <div class="report-stat-item"><strong>Pontuação Final:</strong> <span id="rep-score">0</span> pts</div>
+          <div class="report-stat-item"><strong>Precisão Acadêmica:</strong> <span id="rep-accuracy">0%</span></div>
+          <div class="report-stat-item"><strong>Moedas de Dados:</strong> <span id="rep-coins">0</span></div>
+          <div class="report-stat-item"><strong>Nota Final TGDQ:</strong> <span id="rep-grade" style="font-weight:bold; color:#2563eb; font-size:16px;">0.0 / 10.0</span></div>
+        </div>
+
+        <h4 style="margin: 12px 0 6px 0; font-size: 14px; color: #1e3a8a;">Matriz de Avaliação dos Módulos Obrigatórios:</h4>
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Módulo Curricular</th>
+              <th>Status do Aluno</th>
+            </tr>
+          </thead>
+          <tbody id="report-table-body"></tbody>
+        </table>
+
+        <div style="font-size: 12px; color: #334155; background: #f0f9ff; padding: 10px; border-radius: 6px; border-left: 4px solid #0284c7;">
+          <strong>Parecer do Instrutor:</strong> O estudante concluiu a simulação prática de TGDQ, aplicando a coleta, organização e análise de dados empresariais.
+        </div>
+
+        <div class="report-actions">
+          <button class="btn-action btn-blue" onclick="copyReportText()">📋 Copiar Texto Formatado</button>
+          <button class="btn-action btn-green" onclick="window.print()">🖨️ Imprimir / Salvar PDF (Google Drive)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class RetroSound {
+      constructor() { this.ctx = null; }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+      }
+      playJump() {
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+          osc.start(); osc.stop(this.ctx.currentTime + 0.12);
+        } catch(e) {}
+      }
+      playCoin() {
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(987.77, this.ctx.currentTime);
+          osc.frequency.setValueAtTime(1318.51, this.ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+          osc.start(); osc.stop(this.ctx.currentTime + 0.3);
+        } catch(e) {}
+      }
+      playCorrect() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime, osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          osc.frequency.setValueAtTime(1046.50, now + 0.24);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+          osc.start(); osc.stop(now + 0.45);
+        } catch(e) {}
+      }
+      playWrong() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime, osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.35);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.start(); osc.stop(now + 0.35);
+        } catch(e) {}
+      }
+    }
+
+    const audio = new RetroSound();
+
+    const GAME_LEVELS = [
+      {
+        id: 1, title: "Fase 1: Fundamentos de Dados", bgSky: "#38bdf8", bgGround: "#15803d",
+        topic: "Diferença entre Dado, Informação e Conhecimento",
+        question: "A empresa registrou o número '150' de forma isolada. Em seguida, formatou como '150 vendas no mês de Agosto'. Qual é a transição correta de conceitos?",
+        options: [
+          { text: "A) 150 é Conhecimento e a frase formatada é um Dado bruto.", correct: false },
+          { text: "B) 150 é um Dado bruto; '150 vendas em Agosto' é uma Informação contextualizada.", correct: true },
+          { text: "C) Ambos são considerados dados não estruturados.", correct: false },
+          { text: "D) 150 é uma Causalidade estatística.", correct: false }
+        ]
+      },
+      {
+        id: 2, title: "Fase 2: Pesquisa e Validação de Dados", bgSky: "#34d399", bgGround: "#047857",
+        topic: "Auditoria, Fontes e Séries Históricas",
+        question: "Ao comparar o IPCA dos últimos 5 anos, a equipe encontrou dois valores divergentes para o mesmo período. Qual o procedimento correto de auditoria?",
+        options: [
+          { text: "A) Escolher o maior valor para garantir margem de segurança.", correct: false },
+          { text: "B) Conferir a fonte oficial (ex: IBGE), verificar a unidade de medida e o período correspondente.", correct: true },
+          { text: "C) Excluir todo o histórico e criar uma média inventada.", correct: false },
+          { text: "D) Somar os dois e dividir por dois sem checar a fonte.", correct: false }
+        ]
+      },
+      {
+        id: 3, title: "Fase 3: Estrutura de Planilhas", bgSky: "#a78bfa", bgGround: "#6d28d9",
+        topic: "Operações Matemáticas e Referências de Células",
+        question: "Em uma planilha de custos, como devemos calcular o Custo Total multiplicando a Quantidade (célula A2) pelo Preço Unitário (célula B2)?",
+        options: [
+          { text: "A) =A2 * B2", correct: true },
+          { text: "B) A2 x B2 =", correct: false },
+          { text: "C) =SOMA(A2:B2) * 100", correct: false },
+          { text: "D) MULTIPLICAR(A2; B2)", correct: false }
+        ]
+      },
+      {
+        id: 4, title: "Fase 4: Funções de Pesquisa e Lógicas", bgSky: "#fbbf24", bgGround: "#b45309",
+        topic: "PROCV, PROCX e Função SE",
+        question: "Para buscar a descrição e o preço de um item pelo seu código em qualquer coluna da tabela sem limitações de busca à esquerda, qual função moderna é recomendada?",
+        options: [
+          { text: "A) PROCX", correct: true },
+          { text: "B) SOMASE", correct: false },
+          { text: "C) CONT.SE", correct: false },
+          { text: "D) CONCATENAR", correct: false }
+        ]
+      },
+      {
+        id: 5, title: "Fase 5: OLTP vs OLAP e Arquitetura", bgSky: "#f472b6", bgGround: "#be185d",
+        topic: "Data Warehouse, ETL e Sistemas Transacionais",
+        question: "Um sistema de caixa de loja registra centenas de cupons fiscais por minuto (OLTP). Qual estrutura é ideal para consolidar e analisar esse histórico longo de vendas (OLAP)?",
+        options: [
+          { text: "A) Data Warehouse (DW) alimentado por processos de ETL.", correct: true },
+          { text: "B) Bloco de notas no computador do caixa.", correct: false },
+          { text: "C) Substituir o banco por arquivos de texto simples.", correct: false },
+          { text: "D) Apenas tabelas dinâmicas temporárias sem salvamento.", correct: false }
+        ]
+      },
+      {
+        id: 6, title: "Fase 6: Estatística Descritiva", bgSky: "#22d3ee", bgGround: "#0e7490",
+        topic: "Média, Mediana e Desvio Padrão",
+        question: "Uma empresa possui salários de R$ 2.000, R$ 2.000, R$ 2.500 e R$ 60.000 (Diretor). Qual medida representa melhor o salário típico dos funcionários sem sofrer distorção extrema?",
+        options: [
+          { text: "A) Mediana (o valor central da distribuição).", correct: true },
+          { text: "B) Média Aritmética Simples.", correct: false },
+          { text: "C) Amplitude Total.", correct: false },
+          { text: "D) Variância Amostral.", correct: false }
+        ]
+      },
+      {
+        id: 7, title: "Fase 7: Indicadores e Métricas", bgSky: "#a3e635", bgGround: "#4d7c0f",
+        topic: "Cálculos de Margem de Lucro % e Participação",
+        question: "Se uma empresa teve Receita Total de R$ 200.000 e Lucro Líquido de R$ 50.000, qual foi a sua Margem de Lucro Percentual?",
+        options: [
+          { text: "A) 25%", correct: true },
+          { text: "B) 75%", correct: false },
+          { text: "C) 400%", correct: false },
+          { text: "D) 2,5%", correct: false }
+        ]
+      },
+      {
+        id: 8, title: "Fase 8: Gráficos e Funções de Data", bgSky: "#ff7849", bgGround: "#c2410c",
+        topic: "Comunicação Visual, HOJE, MÊS e ANO",
+        question: "Qual tipo de gráfico é o mais indicado para apresentar a evolução contínua das vendas mês a mês ao longo do ano (Série Temporal)?",
+        options: [
+          { text: "A) Gráfico de Linhas.", correct: true },
+          { text: "B) Gráfico de Pizza 3D com 30 fatias.", correct: false },
+          { text: "C) Gráfico de Dispersão sem eixos.", correct: false },
+          { text: "D) Tabela sem formatação.", correct: false }
+        ]
+      },
+      {
+        id: 9, title: "Fase 9: Tabelas Dinâmicas e Automação", bgSky: "#818cf8", bgGround: "#4338ca",
+        topic: "Pivot Tables, Macros e Análise de Cenários",
+        question: "Qual recurso do Excel permite cruzar, resumir e agrupar rapidamente milhares de linhas de vendas por região e produto sem criar fórmulas manuais uma a uma?",
+        options: [
+          { text: "A) Tabela Dinâmica (Pivot Table).", correct: true },
+          { text: "B) Formatação Condicional básica.", correct: false },
+          { text: "C) Validação de Dados simples.", correct: false },
+          { text: "D) Localizar e Substituir.", correct: false }
+        ]
+      },
+      {
+        id: 10, title: "Fase 10: O Fio Condutor da Decisão", bgSky: "#2dd4bf", bgGround: "#0f766e",
+        topic: "Dado -> Tratamento -> Análise -> Indicador -> Decisão -> Ação",
+        question: "Ao identificar no relatório de indicadores que um produto perdeu 30% das vendas, qual é o papel do assistente administrativo no ciclo TGDQ?",
+        options: [
+          { text: "A) Interpretar as evidências numéricas e propor recomendações justificadas para a tomada de decisão.", correct: true },
+          { text: "B) Apagar os dados negativos para não alarmar a gerência.", correct: false },
+          { text: "C) Ignorar o indicador e manter os mesmos procedimentos.", correct: false },
+          { text: "D) Desligar os computadores e encerrar o projeto.", correct: false }
+        ]
+      }
+    ];
+
+    let canvas, ctx;
+
+    const state = {
+      currentLevelIdx: 0,
+      score: 0,
+      coins: 0,
+      totalQuestionsAnswered: 0,
+      correctQuestionsAnswered: 0,
+      levelResults: [],
+      isQuizActive: false,
+      gameLoopReq: null,
+      animFrame: 0
+    };
+
+    const keys = { left: false, right: false, up: false };
+
+    const player = {
+      x: 50, y: 300, width: 30, height: 42,
+      vx: 0, vy: 0, speed: 5.2, jumpForce: -13.8, gravity: 0.55,
+      grounded: false, jumpsRemaining: 2
+    };
+
+    let platforms = [], questionBlocks = [], coinsList = [], clouds = [], goalFlag = {};
+
+    function initLevel(levelIdx) {
+      const lvl = GAME_LEVELS[levelIdx];
+      const levelHud = document.getElementById('hud-level');
+      if (levelHud) levelHud.innerText = `${lvl.id}/10`;
+
+      player.x = 40; player.y = 280; player.vx = 0; player.vy = 0;
+
+      clouds = [
+        { x: 50, y: 50, size: 30 },
+        { x: 300, y: 70, size: 40 },
+        { x: 600, y: 40, size: 35 }
+      ];
+
+      platforms = [
+        { x: 0, y: 380, width: 800, height: 70, type: 'ground' },
+        { x: 170, y: 290, width: 130, height: 22, type: 'brick' },
+        { x: 350, y: 220, width: 140, height: 22, type: 'brick' },
+        { x: 550, y: 280, width: 130, height: 22, type: 'brick' }
+      ];
+
+      questionBlocks = [
+        { x: 385, y: 140, width: 36, height: 36, active: true }
+      ];
+
+      coinsList = [
+        { x: 190, y: 250, radius: 10, collected: false },
+        { x: 230, y: 250, radius: 10, collected: false },
+        { x: 370, y: 180, radius: 10, collected: false },
+        { x: 420, y: 180, radius: 10, collected: false },
+        { x: 570, y: 240, radius: 10, collected: false },
+        { x: 610, y: 240, radius: 10, collected: false }
+      ];
+
+      goalFlag = { x: 720, y: 200, width: 40, height: 180 };
+    }
+
+    function updatePhysics() {
+      if (state.isQuizActive) return;
+
+      if (keys.left) player.vx = -player.speed;
+      else if (keys.right) player.vx = player.speed;
+      else player.vx *= 0.78;
+
+      player.vy += player.gravity;
+      player.x += player.vx;
+      player.y += player.vy;
+
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+      player.grounded = false;
+      for (let p of platforms) {
+        if (
+          player.x < p.x + p.width &&
+          player.x + player.width > p.x &&
+          player.y + player.height >= p.y &&
+          player.y + player.height <= p.y + player.vy + 12 &&
+          player.vy >= 0
+        ) {
+          player.grounded = true;
+          player.vy = 0;
+          player.y = p.y - player.height;
+          player.jumpsRemaining = 2;
+        }
+      }
+
+      for (let b of questionBlocks) {
+        if (
+          b.active &&
+          player.x < b.x + b.width &&
+          player.x + player.width > b.x &&
+          player.y <= b.y + b.height &&
+          player.y >= b.y + b.height - 14 &&
+          player.vy < 0
+        ) {
+          player.vy = 3;
+          b.active = false;
+          triggerQuizModal();
+        }
+      }
+
+      for (let c of coinsList) {
+        if (!c.collected) {
+          const dx = (player.x + player.width / 2) - c.x;
+          const dy = (player.y + player.height / 2) - c.y;
+          if (Math.sqrt(dx * dx + dy * dy) < c.radius + player.width / 2) {
+            c.collected = true;
+            state.coins += 1;
+            state.score += 100;
+            audio.playCoin();
+            updateHUD();
+          }
+        }
+      }
+
+      if (player.x + player.width >= goalFlag.x && player.y + player.height >= goalFlag.y) {
+        advanceLevel();
+      }
+
+      clouds.forEach(c => {
+        c.x += 0.3;
+        if (c.x > canvas.width + 50) c.x = -60;
+      });
+    }
+
+    function handleJump() {
+      if (player.jumpsRemaining > 0) {
+        player.vy = player.jumpForce;
+        player.jumpsRemaining--;
+        audio.playJump();
+      }
+    }
+
+    function render() {
+      if (!ctx) return;
+      state.animFrame++;
+      const lvl = GAME_LEVELS[state.currentLevelIdx];
+
+      ctx.fillStyle = lvl.bgSky;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      for (let c of clouds) {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+        ctx.arc(c.x + 20, c.y - 10, c.size * 0.8, 0, Math.PI * 2);
+        ctx.arc(c.x + 40, c.y, c.size * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let p of platforms) {
+        if (p.type === 'ground') {
+          ctx.fillStyle = lvl.bgGround;
+          ctx.fillRect(p.x, p.y, p.width, p.height);
+          ctx.fillStyle = '#86efac';
+          ctx.fillRect(p.x, p.y, p.width, 8);
+        } else {
+          ctx.fillStyle = '#b45309';
+          ctx.fillRect(p.x, p.y, p.width, p.height);
+          ctx.strokeStyle = '#78350f';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(p.x, p.y, p.width, p.height);
+          ctx.beginPath();
+          ctx.moveTo(p.x + p.width/2, p.y); ctx.lineTo(p.x + p.width/2, p.y + p.height);
+          ctx.stroke();
+        }
+      }
+
+      for (let b of questionBlocks) {
+        if (b.active) {
+          const glow = Math.sin(state.animFrame * 0.1) * 3;
+          ctx.fillStyle = '#fbbf24';
+          ctx.fillRect(b.x - glow/2, b.y - glow/2, b.width + glow, b.height + glow);
+          ctx.strokeStyle = '#d97706';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(b.x - glow/2, b.y - glow/2, b.width + glow, b.height + glow);
+
+          ctx.fillStyle = '#78350f';
+          ctx.font = 'bold 22px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('?', b.x + b.width / 2, b.y + 27);
+        } else {
+          ctx.fillStyle = '#64748b';
+          ctx.fillRect(b.x, b.y, b.width, b.height);
+          ctx.strokeStyle = '#334155';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(b.x, b.y, b.width, b.height);
+        }
+      }
+
+      for (let c of coinsList) {
+        if (!c.collected) {
+          const scaleX = Math.abs(Math.sin(state.animFrame * 0.08));
+          ctx.save();
+          ctx.translate(c.x, c.y);
+          ctx.scale(scaleX, 1);
+          ctx.beginPath();
+          ctx.arc(0, 0, c.radius, 0, Math.PI * 2);
+          ctx.fillStyle = '#f59e0b';
+          ctx.fill();
+          ctx.strokeStyle = '#fef08a';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(goalFlag.x, goalFlag.y, 8, goalFlag.height);
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(goalFlag.x + 8, goalFlag.y);
+      ctx.lineTo(goalFlag.x + 45, goalFlag.y + 22);
+      ctx.lineTo(goalFlag.x + 8, goalFlag.y + 44);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.save();
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(player.x + 2, player.y, player.width - 2, 10);
+      ctx.fillRect(player.x + (player.vx < 0 ? -4 : 6), player.y + 6, 20, 5);
+      ctx.fillStyle = '#fed7aa';
+      ctx.fillRect(player.x + 4, player.y + 10, player.width - 8, 12);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(player.x + (player.vx < 0 ? 6 : 18), player.y + 12, 4, 4);
+      ctx.fillStyle = '#451a03';
+      ctx.fillRect(player.x + (player.vx < 0 ? 2 : 12), player.y + 18, 14, 4);
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(player.x + 4, player.y + 22, player.width - 8, 16);
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(player.x + 2, player.y + 22, 4, 10);
+      ctx.fillRect(player.x + player.width - 6, player.y + 22, 4, 10);
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(player.x + 8, player.y + 26, 3, 3);
+      ctx.fillRect(player.x + 18, player.y + 26, 3, 3);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(player.x + 2, player.y + 38, 10, 4);
+      ctx.fillRect(player.x + player.width - 12, player.y + 38, 10, 4);
+      ctx.restore();
+    }
+
+    function gameLoop() {
+      updatePhysics();
+      render();
+      state.gameLoopReq = requestAnimationFrame(gameLoop);
+    }
+
+    function triggerQuizModal() {
+      state.isQuizActive = true;
+      const lvl = GAME_LEVELS[state.currentLevelIdx];
+
+      document.getElementById('quiz-header').innerHTML = `❓ DESAFIO TGDQ - ${lvl.title.toUpperCase()}`;
+      document.getElementById('quiz-question').innerText = lvl.question;
+
+      const optionsDiv = document.getElementById('quiz-options');
+      optionsDiv.innerHTML = '';
+
+      lvl.options.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => handleAnswer(opt.correct, lvl);
+        optionsDiv.appendChild(btn);
+      });
+
+      document.getElementById('quiz-modal').classList.add('active');
+    }
+
+    function handleAnswer(isCorrect, levelData) {
+      state.totalQuestionsAnswered++;
+      document.getElementById('quiz-modal').classList.remove('active');
+
+      const iconEl = document.getElementById('feedback-icon');
+      const titleEl = document.getElementById('feedback-title');
+      const textEl = document.getElementById('feedback-text');
+      const btnEl = document.getElementById('feedback-btn');
