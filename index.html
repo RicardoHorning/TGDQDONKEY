@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Donkey TGDQ - O Desafio dos Dados</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      touch-action: manipulation;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #050508;
+    }
+
+    /* HUD Bar */
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: #111;
+      border-bottom: 3px solid #ff0055;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 10px;
+      z-index: 10;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .hud-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .hud-label {
+      color: #ff0055;
+      font-size: 8px;
+      letter-spacing: 1px;
+    }
+
+    .hud-value {
+      color: #00e5ff;
+      font-size: 12px;
+      text-shadow: 2px 2px 0px #000;
+    }
+
+    /* Area do Canvas */
+    #canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: calc(100% - 50px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      margin-top: 50px;
+    }
+
+    canvas {
+      border: 4px solid #ff0055;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+      background: #000000;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Tela de Início / Press Start */
+    #start-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .start-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 20px;
+      color: #ff0055;
+      margin-bottom: 10px;
+      text-shadow: 3px 3px 0 #00e5ff;
+    }
+
+    .start-subtitle {
+      font-size: 16px;
+      color: #ffe600;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .btn-start {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      background: #ff0055;
+      color: #fff;
+      border: 3px solid #00e5ff;
+      padding: 16px 28px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #990033, 0 0 20px rgba(0, 229, 255, 0.5);
+      animation: pulse 1.2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+
+    /* Controles Táteis Arcade */
+    #mobile-controls {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      padding: 0 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .control-btn-group {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .btn-touch {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border: 2px solid #00e5ff;
+      color: #00e5ff;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0 #007799;
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .btn-touch:active, .btn-touch.active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #007799;
+      background: #00e5ff;
+      color: #000;
+    }
+
+    .btn-jump {
+      width: 62px;
+      height: 62px;
+      background: linear-gradient(145deg, #ff0055, #990033);
+      border-color: #ff6699;
+      color: #fff;
+      box-shadow: 0 4px 0 #660022;
+      font-size: 9px;
+    }
+
+    /* Modais */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      padding: 15px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #0d0d12;
+      border: 3px solid #ff0055;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 0 30px rgba(255, 0, 85, 0.4);
+    }
+
+    .modal-header {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: #ffe600;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      border-bottom: 2px dashed #ff0055;
+      padding-bottom: 8px;
+    }
+
+    .modal-question {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #f8fafc;
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      background: #1a1a24;
+      border: 2px solid #33334d;
+      border-radius: 8px;
+      padding: 12px 15px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover {
+      background: #2b2b3d;
+      border-color: #00e5ff;
+      color: #00e5ff;
+    }
+
+    .feedback-card {
+      text-align: center;
+      max-width: 500px;
+    }
+
+    .feedback-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .feedback-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .feedback-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Relatorio Executivo */
+    .report-card {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 10px;
+      padding: 22px;
+      font-family: Arial, sans-serif;
+    }
+
+    .report-header {
+      text-align: center;
+      border-bottom: 3px double #0284c7;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    .report-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0369a1;
+      margin: 0;
+    }
+
+    .report-subtitle {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .report-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .report-stat-item {
+      font-size: 13px;
+    }
+
+    .report-stat-item strong {
+      color: #0284c7;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-bottom: 15px;
+    }
+
+    .report-table th, .report-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .report-table th {
+      background: #e2e8f0;
+      color: #0f172a;
+      font-weight: bold;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .btn-blue { background: #0284c7; color: white; }
+    .btn-green { background: #16a34a; color: white; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #report-modal, #report-modal * { visibility: visible; }
+      #report-modal { position: absolute; left: 0; top: 0; width: 100%; }
+      .report-actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    <!-- Tela de Início / Press Start -->
+    <div id="start-screen">
+      <div class="start-title">DONKEY TGDQ</div>
+      <div class="start-subtitle">Desafio de Dados Quantitativos — SENAI</div>
+      <button class="btn-start" onclick="startGame()">▶ INICIAR JOGO</button>
+    </div>
+
+    <!-- HUD Bar -->
+    <div id="hud">
+      <div class="hud-item">
+        <span class="hud-label">FASE</span>
+        <span id="hud-level" class="hud-value">1/10</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">PONTOS</span>
+        <span id="hud-score" class="hud-value">00000</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">MOEDAS</span>
+        <span id="hud-coins" class="hud-value">🪙 00</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">PRECISÃO</span>
+        <span id="hud-accuracy" class="hud-value">100%</span>
+      </div>
+    </div>
+
+    <div id="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+      <div id="mobile-controls">
+        <div class="control-btn-group">
+          <div id="btn-left" class="btn-touch">◄</div>
+          <div id="btn-right" class="btn-touch">►</div>
+        </div>
+        <div class="control-btn-group">
+          <div id="btn-up" class="btn-touch">▲</div>
+          <div id="btn-down" class="btn-touch">▼</div>
+          <div id="btn-jump" class="btn-touch btn-jump">PULAR</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Quiz -->
+  <div id="quiz-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div id="quiz-header" class="modal-header">❓ DESAFIO TGDQ</div>
+      <div id="quiz-question" class="modal-question">Carregando pergunta...</div>
+      <div id="quiz-options" class="options-grid"></div>
+    </div>
+  </div>
+
+  <!-- Modal de Feedback -->
+  <div id="feedback-modal" class="modal-overlay">
+    <div class="modal-card feedback-card">
+      <div id="feedback-icon" class="feedback-icon">💡</div>
+      <div id="feedback-title" class="feedback-title">FEEDBACK</div>
+      <div id="feedback-text" class="feedback-text">Mensagem...</div>
+      <button id="feedback-btn" class="btn-action btn-blue" onclick="closeFeedback()">CONTINUAR A ESCALAR ▶</button>
+    </div>
+  </div>
+
+  <!-- Modal de Relatório Final -->
+  <div id="report-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="report-card">
+        <div class="report-header">
+          <h2 class="report-title">RELATÓRIO DE DESEMPENHO ACADÊMICO</h2>
+          <div class="report-subtitle">UC: Tratamento e Gerenciamento de Dados Quantitativos (TGDQ) | SENAI</div>
+        </div>
+
+        <div class="report-stats">
+          <div class="report-stat-item"><strong>Estudante:</strong> Aluno(a) Assistente Adm.</div>
+          <div class="report-stat-item"><strong>Data de Emissão:</strong> <span id="rep-date">--/--/----</span></div>
+          <div class="report-stat-item"><strong>Pontuação Final:</strong> <span id="rep-score">0</span> pts</div>
+          <div class="report-stat-item"><strong>Precisão Acadêmica:</strong> <span id="rep-accuracy">0%</span></div>
+          <div class="report-stat-item"><strong>Moedas Coletadas:</strong> <span id="rep-coins">0</span></div>
+          <div class="report-stat-item"><strong>Nota Final TGDQ:</strong> <span id="rep-grade" style="font-weight:bold; color:#0284c7; font-size:16px;">0.0 / 10.0</span></div>
+        </div>
+
+        <h4 style="margin: 10px 0 6px 0; font-size: 13px; color: #0369
